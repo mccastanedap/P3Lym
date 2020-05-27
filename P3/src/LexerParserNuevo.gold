@@ -1,6 +1,7 @@
  //GAutomataFrame.show(Parser2)
    using gold.structures.automaton.*
 using gold.visualization.automaton.*
+using importar.*
 
 procedure main(args:String[]) begin
    	Lexer = createTransducer()
@@ -30,10 +31,16 @@ procedure testParser(M:ITransducer,P:IPushdownAutomaton) begin
 			end
 			
 		end
-		result:=M.acceptsString(string)    
+		result:=M.acceptsString(string)
 		tokenStream := M.getOutputString()
 		print "The lexer did "+(result?"":"not ")+" accept the string."
-		if result then print "Token Stream: "+ tokenStream end	
+		if result then print "Token Stream: "+ tokenStream end
+		if result  then 
+		validar = ValidarVariables.validar(string)
+		print validar
+		if validar == false then print "Las variables usadas no corresponden a las definidas" 
+		end
+		end
 		result:=P.acceptsString(tokenStream )  // Al parser se le pasa el token stream
 		print "Sintácticamente, la cadena fue "+(result?"aceptada":"rechazada")
 	end
@@ -93,8 +100,8 @@ function createAutomaton():IPushdownAutomaton begin
 	M.delta("P", "Y", "n").ignore()
 	M.delta("n", "o", "o").ignore()
 	M.delta("N", "o", "o").ignore()
-	M.delta("o", "O", "O").ignore()
-	M.delta("o", "C", "C").ignore()
+	M.delta("o", "G", "O").ignore()
+	M.delta("o", "G", "C").ignore()
 	M.delta("Y", "p", "p").ignore()
 	M.delta("p", "Y", "N").ignore()
 	M.delta("p", "Y", "n").ignore()
@@ -361,7 +368,7 @@ function δ(q,σ) begin
 	elseif q="Init" and σ='C'  then return "C"
 	elseif q="C" and σ='h'  then return "Ch"
 	elseif q="Ch" and σ='i'  then return "Chi"
-	elseif q="Chip" and σ='p'  then return "Chip"
+	elseif q="Chi" and σ='p'  then return "Chip"
 	elseif q="Chip" and σ='s'  then return "Chips"
 	//elseif q="Chips" then return "Init"
 		
@@ -482,7 +489,7 @@ function h(q,σ) begin
 					
 			elseif q=="Chips" then return "C"+s
 				
-			elseif q=="Balloons" then return "O"+s
+			elseif q=="Ballons" then return "O"+s
 			
 			elseif q=="north" then return "z"+s 
 				
