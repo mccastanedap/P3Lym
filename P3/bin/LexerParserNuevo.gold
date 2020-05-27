@@ -1,6 +1,7 @@
  //GAutomataFrame.show(Parser2)
    using gold.structures.automaton.*
 using gold.visualization.automaton.*
+using importar.*
 
 procedure main(args:String[]) begin
    	Lexer = createTransducer()
@@ -30,10 +31,16 @@ procedure testParser(M:ITransducer,P:IPushdownAutomaton) begin
 			end
 			
 		end
-		result:=M.acceptsString(string)    
+		result:=M.acceptsString(string)
 		tokenStream := M.getOutputString()
 		print "The lexer did "+(result?"":"not ")+" accept the string."
-		if result then print "Token Stream: "+ tokenStream end	
+		if result then print "Token Stream: "+ tokenStream end
+		if result  then 
+		validar = ValidarVariables.validar(string)
+		print validar
+		if validar == false then print "Las variables usadas no corresponden a las definidas" 
+		end
+		end
 		result:=P.acceptsString(tokenStream )  // Al parser se le pasa el token stream
 		print "Sintácticamente, la cadena fue "+(result?"aceptada":"rechazada")
 	end
@@ -56,6 +63,7 @@ function createAutomaton():IPushdownAutomaton begin
 	F:={"I", "E"}
 	
 	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+	
 	M.delta("I", "R", "R").ignore()
 	M.delta("R", "V", "V").ignore()
 	M.delta("V", "N", "N").push("N")
@@ -69,11 +77,12 @@ function createAutomaton():IPushdownAutomaton begin
 	M.delta("B", "P", "P").ignore()
 	M.delta("B", "p", "p").ignore()
 	
+	//Todo el protocolo de asignarle un valor a una varible
 	M.delta("B", "a", "a").push("a")
 	M.delta("a", "n", "n").push("n")
 	M.delta("n", "U", "U").pop("n")
 	M.delta("U", "Y", "N").pop("a")
-	M.delta("Y", "a", "a").push("a")
+	
 
 	M.delta("Y", "m", "m").ignore()
 	M.delta("m", "G", "N").ignore()
@@ -83,37 +92,48 @@ function createAutomaton():IPushdownAutomaton begin
 	M.delta("t", "Y", "L").ignore()
 	M.delta("t", "Y", "R").ignore()
 	M.delta("t", "Y", "r").ignore()
+	
 	M.delta("Y", "f", "f").ignore()
 	M.delta("f", "Y", "W").ignore()
 	M.delta("f", "Y", "s").ignore()
 	M.delta("f", "Y", "e").ignore()
 	M.delta("f", "Y", "z").ignore()
+	
 	M.delta("Y", "P", "P").ignore()
 	M.delta("P", "Y", "N").ignore()
 	M.delta("P", "Y", "n").ignore()
-	M.delta("n", "o", "o").ignore()
-	M.delta("N", "o", "o").ignore()
-	M.delta("o", "O", "O").ignore()
-	M.delta("o", "C", "C").ignore()
+	M.delta("Y", "o", "o").ignore()
+	M.delta("Y", "o", "o").ignore()
+	M.delta("o", "G", "O").ignore()
+	M.delta("o", "G", "C").ignore()
+	
 	M.delta("Y", "p", "p").ignore()
 	M.delta("p", "Y", "N").ignore()
 	M.delta("p", "Y", "n").ignore()
 	
-//Casos de move toThe
+	//Casos de move toThe
 	M.delta("G", "T", "T").ignore()
 	M.delta("T", "Y", "F").ignore()
 	M.delta("T", "Y", "R").ignore()
 	M.delta("T", "Y", "L").ignore()
 	M.delta("T", "Y", "K").ignore()
 	
+	//Casos de move inDir
+	M.delta("G", "D", "D").ignore()
+	M.delta("D", "Y", "z").ignore()
+	M.delta("T", "Y", "s").ignore()
+	M.delta("T", "Y", "e").ignore()
+	M.delta("T", "Y", "W").ignore()
+	
 	//Despues de leer move sencillo
-	M.delta("G", "a", "a").push("a")
 	M.delta("G", "m", "m").ignore()
 	M.delta("G", "t", "t").ignore()
 	M.delta("G", "f", "f").ignore()
 	M.delta("G", "P", "P").ignore()
 	M.delta("G", "p", "p").ignore()
 	
+	//Finalizacion
+	M.delta("G", "E", "E").pop("B")
 	M.delta("Y", "E", "E").pop("B")
 	M.delta("E", "E",λ ).pop("N")
 	
@@ -359,7 +379,7 @@ function δ(q,σ) begin
 	elseif q="Init" and σ='C'  then return "C"
 	elseif q="C" and σ='h'  then return "Ch"
 	elseif q="Ch" and σ='i'  then return "Chi"
-	elseif q="Chip" and σ='p'  then return "Chip"
+	elseif q="Chi" and σ='p'  then return "Chip"
 	elseif q="Chip" and σ='s'  then return "Chips"
 	//elseif q="Chips" then return "Init"
 		
@@ -480,7 +500,7 @@ function h(q,σ) begin
 					
 			elseif q=="Chips" then return "C"+s
 				
-			elseif q=="Balloons" then return "O"+s
+			elseif q=="Ballons" then return "O"+s
 			
 			elseif q=="north" then return "z"+s 
 				

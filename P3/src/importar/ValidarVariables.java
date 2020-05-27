@@ -13,7 +13,9 @@ public class ValidarVariables {
 		System.out.println(cadena);
 		ArrayList<String>tokens= new ArrayList<String>();
 		String[] token = new String[] { "ROBOT_R","BEGIN","assign:","to:","assign:",
-				"move:","turn:","left","END"};
+				"move:","turn:","front", "back","left", "right", "around", "face:", "put:", "of:", "pick:", "toThe:", "inDir:", "Chips",
+				"Ballons", "north", "south", "east", "west","if:", "then:","while:", "do:", "repeat:", "times:", "facing:",
+				"canPut:", "canPick","canPick:", "canMove","END"};
 		for(String e: token)
 		{	
 		tokens.add(e);
