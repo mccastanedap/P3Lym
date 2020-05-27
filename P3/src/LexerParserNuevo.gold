@@ -114,6 +114,8 @@ function createAutomaton():IPushdownAutomaton begin
 	M.delta("G", "P", "P").ignore()
 	M.delta("G", "p", "p").ignore()
 	
+	//Finalizacion
+	M.delta("G", "E", "E").pop("B")
 	M.delta("Y", "E", "E").pop("B")
 	M.delta("E", "E",λ ).pop("N")
 	
