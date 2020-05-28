@@ -76,6 +76,9 @@ function createAutomaton():IPushdownAutomaton begin
 	M.delta("B", "f", "f").ignore()
 	M.delta("B", "P", "P").ignore()
 	M.delta("B", "p", "p").ignore()
+	M.delta("B", "g", "g").ignore() //agregado!
+	M.delta("B", "u", "u").ignore() //agregado!
+	M.delta("B", "c", "c").ignore() //agregado!
 	
 	//Todo el protocolo de asignarle un valor a una varible
 	M.delta("B", "a", "a").push("a")

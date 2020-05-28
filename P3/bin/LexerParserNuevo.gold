@@ -290,7 +290,8 @@ function δ(q,σ) begin
 	elseif q="Init" and σ='f'  then return "f"
 	elseif q="f" and σ='r'  then return "fr"
 	elseif q="fr" and σ='o'  then return "fro"
-	elseif q="fro" and σ='n'  then return "front"
+	elseif q="fro" and σ='n'  then return "fron"
+	elseif q="fron" and σ='t'  then return "front"	
 	//elseif q="front" then return "Init"
 		
 	elseif q="Init" and σ='i'  then return "i"
