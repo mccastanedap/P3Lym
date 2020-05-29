@@ -208,14 +208,14 @@ function createTransducer():ITransducer begin
 	
 	Q:= {"Init","R", "RO", "ROB" ,"ROBO", "ROBOT", "ROBOT_", "ROBOT_R" ,"V", "VA", "VAR", "VARS","B", "BE", "BEG", "BEGI","BEGIN", "E", "EN", "END",
 	"a", "as","ass", "assi","assig", "assign", "t", "to","m","mo","mov","move", "t","tu", "tur","turn","f","fa","fac","face","p","pu", "put","o","of",
-	"p","pi","pic","pick","t","to","toT","toTh","toThe","i","in","inD","inDi","inDir", "r","ri","rig", "righ", "right", "l", "le", "lef", "left", "b",
-	"ba", "bac", "back", "f", "fr", "fro", "fron", "front", "Num","Nombre", "i", "if", "t", "th", "the", "then", "e", "el", "els", "else", "w","wh","whi",
-	"whil", "while", "d", "do", "r", "re", "rep", "repe", "repea", "repeat", "t", "ti", "tim", "time", "times", "f", "fa", "fac", "faci","facin", "facing",
+	"p","pi","pic","pick","t","to","toT","toTh","toThe","i","in","inD","inDi","inDir", "r","ri","rig", "righ", "right", "l", "le", "lef", "left","a","ar",
+	"aro","arou","aroun", "around","b",	"ba", "bac", "back", "f", "fr", "fro", "fron", "front", "Num","Nombre", "i", "if", "t", "th", "the", "then", "e",
+	"el", "els", "else", "w","wh","whi","whil", "while", "d", "do", "r", "re", "rep", "repe", "repea", "repeat", "t", "ti", "tim", "time", "times", "f", "fa", "fac", "faci","facin", "facing",
 	"c","ca","can","canP","canPu","canPut", "o","of","c","ca","can","canM","canMo", "canMov", "canMove","c","ca","can","canP","canPi","canPic", "canPick",
 	"canPick:" ,"n", "no", "not", "C", "Ch", "Chi", "Chip", "Chips","B","Ba","Bal","Ball", "Ballo", "Ballon", "Ballons", "n", "no", "nor", "nort", "north",
 	"s", "so", "sou", "sout", "south", "w", "we", "wes", "west","e","ea", "eas", "east","ERROR","assign:","move:","inDir:","toThe:","turn:","face:","put:",
 	"pick:","if:","then:","else:","while:","do:","repeat:","times:",
-	"facing:","canPut:","of:","canMove:","canMove:","not:","to:" } 
+	"facing:","canPut:","of:","canMove:","canMove:","not:","to:", "around:" } 
 	
 	
 	Σ:=('0'‥'9') ∪ ('a' ‥ 'z') ∪ ('A' ‥ 'Z') ∪ {'(',')',' ', '_' , ':' , ','} 
@@ -337,8 +337,14 @@ function δ(q,σ) begin
 	elseif q="l" and σ='e'  then return "le"
 	elseif q="le" and σ='f'  then return "lef"
 	elseif q="lef" and σ='t'  then return "left"
-	//elseif q="left" then return "Init"
 		
+	elseif q="Init" and σ='a'  then return "a"
+	elseif q="a" and σ='r'  then return "ar"
+	elseif q="ar" and σ='o'  then return "aro"
+	elseif q="aro" and σ='u'  then return "arou"	
+	elseif q="arou" and σ='n'  then return "aroun"
+	elseif q="aroun" and σ='d'  then return "around"	
+	elseif q="around" and σ=':'  then return "around:"	
 	elseif q="Init" and σ='b'  then return "b"
 	elseif q="b" and σ='a'  then return "ba"
 	elseif q="ba" and σ='c'  then return "bac"
@@ -500,7 +506,7 @@ function δ(q,σ) begin
 		q="north" or q="Ballons" or q="Chips" or q="not" or q="canMove:" or
 		q="canPut:" or q="canPick:" or q="facing" or q="times:" or q="repeat:" or
 		q="do:" or q="while:" or q="else:" or q="then:" or q="if:" or q="front" or q="back" or
-		q= "left" or q="right" or q="inDir" or q="toThe:" or q="pick:" or q="of:" or 
+		q= "left" or q="right" or q= "around"or q="inDir" or q="toThe:" or q="pick:" or q="of:" or 
 		q="put:" or q="face:" or  q="turn:" or q= "move:" or q="to:" or q="assign:" or
 		q="END" or q="BEGIN" or q="VARS" or q="ROBOT_R") and σ ∈ {'\n','\t',' '}
 		then return "Init"
