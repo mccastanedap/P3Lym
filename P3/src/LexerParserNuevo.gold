@@ -134,6 +134,7 @@ function createAutomaton():IPushdownAutomaton begin
 		
 	//Todo el protocolo de asignarle un valor a una varible
 	M.delta("B", "a", "a").push("a")
+	M.delta("Y", "a", "a").push("a")
 	M.delta("a", "n", "n").push("n")
 	M.delta("n", "U", "U").pop("n")
 	M.delta("U", "Y", "N").pop("a")
