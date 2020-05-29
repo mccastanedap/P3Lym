@@ -14,8 +14,8 @@ public class ValidarVariables {
 		ArrayList<String>tokens= new ArrayList<String>();
 		String[] token = new String[] { "ROBOT_R","BEGIN","assign:","to:","assign:",
 				"move:","turn:","front", "back","left", "right", "around", "face:", "put:", "of:", "pick:", "toThe:", "inDir:", "Chips",
-				"Ballons", "north", "south", "east", "west","if:", "then:", "else" ,"while:", "do:", "repeat:", "times:", "facing:",
-				"canPut:", "canPick","not", "canMove","END"};
+				"Ballons", "north", "south", "east", "west","if:", "then:", "else:" ,"while:", "do:", "repeat:", "times:", "facing:",
+				"canPut:", "canPick:","not:", "canMove:","END"};
 		for(String e: token)
 		{	
 		tokens.add(e);

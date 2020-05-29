@@ -51,14 +51,14 @@ end
 
 function createAutomaton():IPushdownAutomaton begin
 	Q:={"R","V","B","a","m","D","T","x","C","O","z",
-	"s","e","W","U","t","f","p","E","n","F","R","L",
+	"s","e","W","U","t","f","p","E","n","F","H","L",
 	"r","k","N","i","h","l","w","d","r","I", "g","u",
-	"o","c","v", "P","K","Y", "G"}
+	"o","c","v", "P","K","Y", "G", "A", "Z"}
 	Σ:={'R','V','B','a','m','D','T','x','C','O','z','s',
-	'e','W','U','t','f','p','E','n','F','R','L','r','k',
+	'e','W','U','t','f','p','E','n','F','H','L','r','k',
 	'N','i','h','l','w','d','r','I', 'g','u','o','c','v',
 	'P','K','$'}
-	Γ:={'N', 'B', 'a', 'n'}
+	Γ:={'N', 'B', 'a', 'n', 'h', 'x'}
 	q₀:="I"
 	F:={"I", "E"}
 	
@@ -77,6 +77,44 @@ function createAutomaton():IPushdownAutomaton begin
 	M.delta("B", "P", "P").ignore()
 	M.delta("B", "p", "p").ignore()
 	
+	//Metodos para los condicionales
+	M.delta("B", "i", "i").ignore() //if
+	
+	M.delta("Y", "i", "i").ignore()
+	
+	M.delta("i", "g", "g").ignore() //fancing
+	M.delta("g", "A", "z").ignore()
+	M.delta("g", "A", "s").ignore()
+	M.delta("g", "A", "e").ignore()
+	M.delta("g", "A", "W").ignore()
+	M.delta("A", "Y", "h").push("h")
+	M.delta("Y", "Y","l").pop("h")
+	M.delta("G", "G","l").pop("h")
+	
+	M.delta("i", "u", "u").ignore() //canPut
+	M.delta("u", "Z", "n").ignore()
+	M.delta("u", "Z", "N").ignore()
+	M.delta("Z", "o", "o").ignore()
+	M.delta("o", "A", "O").ignore()
+	M.delta("o", "A", "C").ignore()
+	
+	
+	M.delta("i", "k", "k").ignore() //canPick
+	M.delta("k", "Z", "n").ignore()
+	M.delta("k", "Z", "N").ignore()
+	
+	M.delta("i", "c", "c").ignore() //canMove
+	M.delta("c", "A", "z").ignore()
+	M.delta("c", "A", "s").ignore()
+	M.delta("c", "A", "e").ignore()
+	M.delta("c", "A", "W").ignore()
+	
+	M.delta("i", "x", "x").push("x") //not
+	M.delta("x", "g", "g").pop("x")
+	M.delta("x", "u", "u").pop("x")
+	M.delta("x", "k", "k").pop("x")
+	M.delta("x", "c", "c").pop("x")
+		
 	//Todo el protocolo de asignarle un valor a una varible
 	M.delta("B", "a", "a").push("a")
 	M.delta("a", "n", "n").push("n")
@@ -90,7 +128,7 @@ function createAutomaton():IPushdownAutomaton begin
 	
 	M.delta("Y", "t", "t").ignore()
 	M.delta("t", "Y", "L").ignore()
-	M.delta("t", "Y", "R").ignore()
+	M.delta("t", "Y", "H").ignore()
 	M.delta("t", "Y", "r").ignore()
 	
 	M.delta("Y", "f", "f").ignore()
@@ -107,6 +145,7 @@ function createAutomaton():IPushdownAutomaton begin
 	M.delta("o", "G", "O").ignore()
 	M.delta("o", "G", "C").ignore()
 	
+	//Se inicia el metodo de pick despues de otro metodo
 	M.delta("Y", "p", "p").ignore()
 	M.delta("p", "Y", "N").ignore()
 	M.delta("p", "Y", "n").ignore()
@@ -114,7 +153,7 @@ function createAutomaton():IPushdownAutomaton begin
 	//Casos de move toThe
 	M.delta("G", "T", "T").ignore()
 	M.delta("T", "Y", "F").ignore()
-	M.delta("T", "Y", "R").ignore()
+	M.delta("T", "Y", "H").ignore()
 	M.delta("T", "Y", "L").ignore()
 	M.delta("T", "Y", "K").ignore()
 	
@@ -154,14 +193,15 @@ function createTransducer():ITransducer begin
 	"p","pi","pic","pick","t","to","toT","toTh","toThe","i","in","inD","inDi","inDir", "r","ri","rig", "righ", "right", "l", "le", "lef", "left", "b",
 	"ba", "bac", "back", "f", "fr", "fro", "fron", "front", "Num","Nombre", "i", "if", "t", "th", "the", "then", "e", "el", "els", "else", "w","wh","whi",
 	"whil", "while", "d", "do", "r", "re", "rep", "repe", "repea", "repeat", "t", "ti", "tim", "time", "times", "f", "fa", "fac", "faci","facin", "facing",
-	"c","ca","can","canP","canPu","canPut", "o","of","c","ca","can","canM","canMo", "canMov", "canMove","n", "no", "not", "C", "Ch", "Chi", "Chip", "Chips",
-	"B","Ba","Bal","Ball", "Ballo", "Ballon", "Ballons", "n", "no", "nor", "nort", "north", "s", "so", "sou", "sout", "south", "w", "we", "wes", "west","e",
-	"ea", "eas", "east","ERROR","assign:","move:","inDir:","toThe:","turn:","face:","put:","pick:","if:","then:","else:","while:","do:","repeat:","times:",
-	"facing:","canPut:","of:","canMove:","not:","to:" } 
+	"c","ca","can","canP","canPu","canPut", "o","of","c","ca","can","canM","canMo", "canMov", "canMove","c","ca","can","canP","canPi","canPic", "canPick",
+	"canPick:" ,"n", "no", "not", "C", "Ch", "Chi", "Chip", "Chips","B","Ba","Bal","Ball", "Ballo", "Ballon", "Ballons", "n", "no", "nor", "nort", "north",
+	"s", "so", "sou", "sout", "south", "w", "we", "wes", "west","e","ea", "eas", "east","ERROR","assign:","move:","inDir:","toThe:","turn:","face:","put:",
+	"pick:","if:","then:","else:","while:","do:","repeat:","times:",
+	"facing:","canPut:","of:","canMove:","canMove:","not:","to:" } 
 	
 	
 	Σ:=('0'‥'9') ∪ ('a' ‥ 'z') ∪ ('A' ‥ 'Z') ∪ {'(',')',' ', '_' , ':' , ','} 
-	Out:={'R','V','B','a','m','D','T','x','C','O','z','s','e','W','U','t','f','p','E','n','F','R','L','r','k','N','i','h','l','w','d','r','I', 'g','u','o','c','v', 'P','K','$'}
+	Out:={'R','V','B','a','m','D','T','x','C','O','z','s','e','W','U','t','f','p','E','n','F','H','L','r','k','N','i','h','l','w','d','r','I', 'g','u','o','c','v', 'P','K', 'k','$'}
 	q₀:="Init"
 	F:= {"Init"}∪{"END"}∪{"ERROR"}
 	return 	GDeterministicTransducer(Q,Σ,Out,q₀,F,δ,g,h)
@@ -370,6 +410,15 @@ function δ(q,σ) begin
 	elseif q="canMov" and σ='e'  then return "canMove"
 	elseif q="canMove" and σ=':'  then return "canMove:"
 	//elseif q="canMove" then return "Init"
+	
+	elseif q="Init" and σ='c'  then return "c"
+	elseif q="c" and σ='a'  then return "ca"
+	elseif q="ca" and σ='n'  then return "can"
+	elseif q="can" and σ='P'  then return "canP"
+	elseif q="canP" and σ='i'  then return "canPi"
+	elseif q="canPi" and σ='c'  then return "canPic"
+	elseif q="canPic" and σ='k'  then return "canPick"
+	elseif q="canPick" and σ=':'  then return "canPick:"
 		
 	elseif q="Init" and σ='n'  then return "n"
 	elseif q="n" and σ='o'  then return "no"
@@ -427,23 +476,12 @@ function δ(q,σ) begin
 	elseif q="Nombre" and σ ∈ ('a' ‥ 'z') then return "Nombre"
 	//elseif q="Nombre" then return "Init"
 	
-	/* 
-	elseif (q="Nombre" or q="Num" or q="east" or q="west" or q="south" or 
-		q="north" or q="Ballons" or q="Chips" or q="not" or q="canMove" or
-		q="canPut" or q="facing" or q="times" or q="repeat" or q="do" or
-		q="while" or q="else" or q="then" or q="if" or q="front" or q="back" or
-		q= "left" or q="right" or q="inDir" or q="ToThe" or q="pick" or q="of" or 
-		q="put" or q="face" or  q="turn" or q= "move" or q="to" or q="assign" or
-		q="END" or q="BEGIN" or q="VARS" or q="ROBOT_R") and σ in {'R','V','B','E','a','t','m','t','f','p','o','p','T','i','r','l','b'
-			,'f','i','t','e','w','d','r','t','f','c','o','c','n','C','B','n','s','w','e'}
-		then return σ+""
-		
-		*/
+
 			
 	elseif (q="Nombre" or q="Num" or q="east" or q="west" or q="south" or 
 		q="north" or q="Ballons" or q="Chips" or q="not" or q="canMove:" or
-		q="canPut:" or q="facing" or q="times:" or q="repeat:" or q="do:" or
-		q="while:" or q="else:" or q="then:" or q="if:" or q="front" or q="back" or
+		q="canPut:" or q="canPick:" or q="facing" or q="times:" or q="repeat:" or
+		q="do:" or q="while:" or q="else:" or q="then:" or q="if:" or q="front" or q="back" or
 		q= "left" or q="right" or q="inDir" or q="toThe:" or q="pick:" or q="of:" or 
 		q="put:" or q="face:" or  q="turn:" or q= "move:" or q="to:" or q="assign:" or
 		q="END" or q="BEGIN" or q="VARS" or q="ROBOT_R") and σ ∈ {'\n','\t',' '}
@@ -489,7 +527,7 @@ function h(q,σ) begin
 				
 			elseif q=="front" then return "F"+s  
 				
-			elseif q=="right" then return "R"+s 
+			elseif q=="right" then return "H"+s 
 				
 			elseif q=="left" then return "L"+s 
 				
@@ -549,6 +587,8 @@ function h(q,σ) begin
 			elseif q=="of:" then return "o"+s
 				
 			elseif q=="canMove:" then return "c"+s 
+				
+			elseif q=="canPick:" then return "k"+s	
 				
 			elseif q=="not:" then return "x"+s 
 				
